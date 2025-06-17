@@ -1,10 +1,4 @@
-// pizzaFactory.js
-
-const {
-  PizzaFromage,
-  PizzaVegetarienne,
-  PizzaPepperoni
-} = require('./pizza');
+const { PizzaFromage, PizzaVegetarienne, PizzaPepperoni } = require('../models/pizza');
 
 class PizzaFactory {
   static createPizza(type) {

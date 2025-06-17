@@ -1,4 +1,4 @@
-const { Pizza } = require('./pizza');
+const { Pizza } = require('../models/pizza');
 
 class Commande {
   constructor(id) {
@@ -29,8 +29,14 @@ class Commande {
 
 class CommandeManager {
   constructor() {
+    if (CommandeManager.instance) {
+      return CommandeManager.instance;
+    }
+
     this.commandes = [];
     this.compteurId = 1;
+
+    CommandeManager.instance = this; // Mémorise l’unique instance
   }
 
   creerCommande() {
@@ -44,6 +50,13 @@ class CommandeManager {
       cmd.afficherCommande();
       console.log(`Total: ${cmd.getTotal()} €\n`);
     });
+  }
+
+  // Permet de réinitialiser l'état du gestionnaire
+  reset() {
+    this.commandes = [];
+    this.compteurId = 1;
+    CommandeManager.instance = null;
   }
 }
 
