@@ -1,34 +1,57 @@
-const PizzaFactory = require('./pizzaFactory');
-const PizzaBuilder = require('./PizzaBuilder');
-const CommandeManager = require('./CommandeManager');
+const PizzaFactory = require('./factory/PizzaFactory');
+const PizzaBuilder = require('./models/PizzaBuilder');
+const CommandeManager = require('./manager/CommandeManager');
 
-// Instancier le gestionnaire
+// Singleton : même instance partout
 const manager = new CommandeManager();
 
-// Créer une commande
+// === COMMANDE 1 ===
+// Client prend une Pepperoni + une custom Hawaïenne
 const commande1 = manager.creerCommande();
 
-// Ajouter une pizza standard
 commande1.ajouterPizza(PizzaFactory.createPizza("pepperoni"));
 
-// Ajouter une pizza personnalisée
-const builder = new PizzaBuilder();
-const pizzaCustom = builder
+const pizzaHawaienne = new PizzaBuilder()
   .setNom("Hawaïenne")
   .addIngredient("ananas")
   .addIngredient("jambon")
   .addIngredient("mozzarella")
   .build();
 
-commande1.ajouterPizza(pizzaCustom);
+commande1.ajouterPizza(pizzaHawaienne);
 
-// Afficher la commande
-commande1.afficherCommande();
-console.log("Total:", commande1.getTotal(), "€");
-
-// Créer une autre commande
+// === COMMANDE 2 ===
+// Client végétarien
 const commande2 = manager.creerCommande();
-commande2.ajouterPizza(PizzaFactory.createPizza("fromage"));
+commande2.ajouterPizza(PizzaFactory.createPizza("vegetarienne"));
 
-// Afficher toutes les commandes
+// === COMMANDE 3 ===
+// Client construit une pizza spéciale 4 fromages
+const commande3 = manager.creerCommande();
+
+const pizza4Fromages = new PizzaBuilder()
+  .setNom("4 Fromages")
+  .addIngredient("mozzarella")
+  .addIngredient("gorgonzola")
+  .addIngredient("parmesan")
+  .addIngredient("chèvre")
+  .build();
+
+commande3.ajouterPizza(pizza4Fromages);
+commande3.ajouterPizza(PizzaFactory.createPizza("fromage"));
+
+// === AFFICHAGE GLOBAL ===
+console.log("\n==============================");
+console.log("RÉCAPITULATIF DES COMMANDES");
+console.log("==============================\n");
+
 manager.afficherToutesLesCommandes();
+
+let totalGlobal = 0;
+for (const commande of manager.commandes) {
+  totalGlobal += commande.getTotal();
+}
+console.log("------------------------------");
+console.log(`TOTAL GLOBAL : ${totalGlobal} €`);
+console.log(`Commandes effectuées : ${manager.commandes.length}`);
+console.log("==============================\n");
